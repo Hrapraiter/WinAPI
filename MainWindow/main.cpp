@@ -51,17 +51,37 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 		return 0;
 	}
 	
+	
+	CONST INT MONITOR_WIDTH = GetSystemMetrics(SM_CXSCREEN);
+	CONST INT MONITOR_HEIGTH = GetSystemMetrics(SM_CYSCREEN);
+	CONST INT MONITOR_SQUARE = MONITOR_WIDTH * MONITOR_HEIGTH;
+
+	CONST INT HWND_SQUARE = MONITOR_SQUARE * 0.75;
+	CONST INT HWND_WIDTH = HWND_SQUARE / MONITOR_HEIGTH;
+	CONST INT HWND_HEIGTH = HWND_SQUARE / MONITOR_WIDTH;
+
+	CHAR title_buffer[MAX_PATH] = {};
+
+	wsprintf(title_buffer, "%s%d%s%d%s%d%s%d",
+		"x : " ,
+		(MONITOR_WIDTH - HWND_WIDTH) / 2 ,
+		" , y : ",
+		(MONITOR_HEIGTH - HWND_HEIGTH) / 2,
+		"      w : ",
+		HWND_WIDTH,
+		" , h : ",
+		HWND_HEIGTH);
 
 	//2) Создание окна:
 	HWND hwnd = CreateWindowEx
 	(
 		NULL, //exStyles
 		g_sz_CLASS_NAME, // ClassName
-		g_sz_CLASS_NAME, //Window title
+		title_buffer, //Window title
 		WS_OVERLAPPEDWINDOW, // Стиль окна. НАбор стилей всегда зависит от класса окна.
 							 //Стиль главного окна всегда WS_OVERLAPPEDWINDOW
-		CW_USEDEFAULT,CW_USEDEFAULT, // Начальная позиция окна (при запуске)
-		CW_USEDEFAULT,CW_USEDEFAULT, // Размер окна
+		(MONITOR_WIDTH - HWND_WIDTH) / 2, (MONITOR_HEIGTH - HWND_HEIGTH)/2, // Начальная позиция окна (при запуске)
+		HWND_WIDTH, HWND_HEIGTH, // Размер окна
 		NULL,		// Parent Window
 		NULL,       // hMenu. Для главного окна этот параметр определяет главное меню.
 					//		  Для дочернего окна (Control) этот параметр содержит ResourseID
@@ -89,10 +109,31 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 }
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	
+
 	switch(uMsg)
 	{
+	case WM_MOVING:
+	case WM_SIZING:
+	{
+		RECT* WinRect = (RECT*)lParam;
+		CHAR title_buffer[MAX_PATH] = {};
+		wsprintf(title_buffer, "%s%d%s%d%s%d%s%d",
+			"x : ",
+			WinRect->left,
+			" , y : ",
+			WinRect->top,
+			"      w : ",
+			WinRect->right - WinRect->left,
+			" , h : ",
+			WinRect->bottom - WinRect->top
+		);
+		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)title_buffer);
+	}
+	break;
 	case WM_CREATE:
 		break;
+	
 	case WM_COMMAND:
 		break;
 	case WM_DESTROY:
