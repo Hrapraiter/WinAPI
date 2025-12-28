@@ -1,0 +1,14 @@
+*.gitignore
+.txt
+.tlog
+.log
+
+.exe
+.vsidx
+.idb
+.pdb
+.vcxproj
+.filters
+.user
+
+Debug/

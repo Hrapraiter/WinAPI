@@ -1,0 +1,79 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0085 9$  \u0022     ",
+      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0085 9$  \u0022     "
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0087 9$  \u0022     ",
+      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0087 9$  \u0022     "
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Resource.rc - IDD_DIALOG_MAIN - Dialog",
+              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc",
+              "RelativeDocumentMoniker": "ListBox\\Resource.rc",
+              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc - IDD_DIALOG_MAIN - Dialog",
+              "RelativeToolTip": "ListBox\\Resource.rc - IDD_DIALOG_MAIN - Dialog",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-12-27T16:14:56.88Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Resource.rc - IDD_DIALOG_ADD - Dialog",
+              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc",
+              "RelativeDocumentMoniker": "ListBox\\Resource.rc",
+              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc - IDD_DIALOG_ADD - Dialog",
+              "RelativeToolTip": "ListBox\\Resource.rc - IDD_DIALOG_ADD - Dialog",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-12-27T16:47:19.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp",
+              "RelativeDocumentMoniker": "ListBox\\main.cpp",
+              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp",
+              "RelativeToolTip": "ListBox\\main.cpp",
+              "ViewState": "AgIAADMAAAAAAAAAAAAYwCUAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-12-27T16:09:32.751Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
