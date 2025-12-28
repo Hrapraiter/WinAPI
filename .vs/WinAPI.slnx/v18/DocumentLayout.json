@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{2D877DE6-D0A6-4E47-B5F6-E80B41BA434A}|ComboBox\\ComboBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ComboBox\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2D877DE6-D0A6-4E47-B5F6-E80B41BA434A}|ComboBox\\ComboBox.vcxproj|solutionrelative:ComboBox\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0085 9$  \u0022     ",
-      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0085 9$  \u0022     "
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0087 9$  \u0022     ",
-      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0087 9$  \u0022     "
+      "AbsoluteMoniker": "D:0:0:{2D877DE6-D0A6-4E47-B5F6-E80B41BA434A}|ComboBox\\ComboBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ComboBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0085 9$  \u0022     ",
+      "RelativeMoniker": "D:0:0:{2D877DE6-D0A6-4E47-B5F6-E80B41BA434A}|ComboBox\\ComboBox.vcxproj|solutionrelative:ComboBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0085 9$  \u0022     "
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -39,36 +35,26 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Resource.rc - IDD_DIALOG_MAIN - Dialog",
-              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc",
-              "RelativeDocumentMoniker": "ListBox\\Resource.rc",
-              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc - IDD_DIALOG_MAIN - Dialog",
-              "RelativeToolTip": "ListBox\\Resource.rc - IDD_DIALOG_MAIN - Dialog",
+              "Title": "Resource.rc - IDD_DIALOG1 - Dialog",
+              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ComboBox\\Resource.rc",
+              "RelativeDocumentMoniker": "ComboBox\\Resource.rc",
+              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ComboBox\\Resource.rc - IDD_DIALOG1 - Dialog",
+              "RelativeToolTip": "ComboBox\\Resource.rc - IDD_DIALOG1 - Dialog",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-12-27T16:14:56.88Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Resource.rc - IDD_DIALOG_ADD - Dialog",
-              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc",
-              "RelativeDocumentMoniker": "ListBox\\Resource.rc",
-              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc - IDD_DIALOG_ADD - Dialog",
-              "RelativeToolTip": "ListBox\\Resource.rc - IDD_DIALOG_ADD - Dialog",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-12-27T16:47:19.996Z"
+              "WhenOpened": "2025-12-28T13:39:12.78Z",
+              "EditorCaption": " - IDD_DIALOG1 - Dialog"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp",
-              "RelativeDocumentMoniker": "ListBox\\main.cpp",
-              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp",
-              "RelativeToolTip": "ListBox\\main.cpp",
-              "ViewState": "AgIAADMAAAAAAAAAAAAYwCUAAAAIAAAAAAAAAA==",
+              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ComboBox\\main.cpp",
+              "RelativeDocumentMoniker": "ComboBox\\main.cpp",
+              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ComboBox\\main.cpp",
+              "RelativeToolTip": "ComboBox\\main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-27T16:09:32.751Z",
+              "WhenOpened": "2025-12-28T08:58:23.403Z",
               "EditorCaption": ""
             }
           ]
