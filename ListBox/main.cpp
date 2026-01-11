@@ -16,11 +16,14 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	HWND hList = GetDlgItem(hwnd, IDC_LIST);
+	INT i = SendMessage(hList, LB_GETCURSEL, 0, 0);
+
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
 	{
-		HWND hList = GetDlgItem(hwnd, IDC_LIST);
+		
 		for (int i = 0; i < sizeof(g_sz_VALUES) / sizeof(g_sz_VALUES[0]); i++)
 			SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)g_sz_VALUES[i]);
 	}
@@ -35,7 +38,11 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case IDC_BUTTON_ADD:
 			DialogBoxParam(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD), hwnd, (DLGPROC)DlgProcAdd, 0);
-		break;
+			break;
+		case IDC_BUTTON_DELETE:
+			if(i != -1)
+				SendMessage(hList, LB_DELETESTRING, i, 0);
+			break;
 		case IDCANCEL:EndDialog(hwnd, 0);
 		}
 	}

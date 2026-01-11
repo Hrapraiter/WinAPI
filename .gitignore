@@ -1,14 +1,13 @@
 *.gitignore
-.txt
-.tlog
-.log
 
-.exe
-.vsidx
-.idb
-.pdb
-.vcxproj
-.filters
-.user
+*.slnx
+**/*.aps
+**/*.json
+**/*.vcxproj
+**/*.filters
+**/*.user
 
-Debug/
+.git/
+.vs/
+x64/
+/x64/

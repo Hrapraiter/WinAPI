@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{6F06A3E4-635E-4F5C-B031-5E63BFF70410}|Calc\\Calc.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\Calc\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6F06A3E4-635E-4F5C-B031-5E63BFF70410}|Calc\\Calc.vcxproj|solutionrelative:Calc\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0085 9$  \u0022     ",
-      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0085 9$  \u0022     "
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0087 9$  \u0022     ",
-      "RelativeMoniker": "D:0:0:{3B3B73FD-626C-4B08-B0EF-F09465354B07}|ListBox\\ListBox.vcxproj|solutionrelative:ListBox\\Resource.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0087 9$  \u0022     "
+      "AbsoluteMoniker": "D:0:0:{6F06A3E4-635E-4F5C-B031-5E63BFF70410}|Calc\\Calc.vcxproj|C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\Calc\\resource.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6F06A3E4-635E-4F5C-B031-5E63BFF70410}|Calc\\Calc.vcxproj|solutionrelative:Calc\\resource.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -39,36 +35,26 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Resource.rc - IDD_DIALOG_MAIN - Dialog",
-              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc",
-              "RelativeDocumentMoniker": "ListBox\\Resource.rc",
-              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc - IDD_DIALOG_MAIN - Dialog",
-              "RelativeToolTip": "ListBox\\Resource.rc - IDD_DIALOG_MAIN - Dialog",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-12-27T16:14:56.88Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Resource.rc - IDD_DIALOG_ADD - Dialog",
-              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc",
-              "RelativeDocumentMoniker": "ListBox\\Resource.rc",
-              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\Resource.rc - IDD_DIALOG_ADD - Dialog",
-              "RelativeToolTip": "ListBox\\Resource.rc - IDD_DIALOG_ADD - Dialog",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2025-12-27T16:47:19.996Z"
+              "Title": "resource.h",
+              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\Calc\\resource.h",
+              "RelativeDocumentMoniker": "Calc\\resource.h",
+              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\Calc\\resource.h",
+              "RelativeToolTip": "Calc\\resource.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-01-10T17:33:06.897Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp",
-              "RelativeDocumentMoniker": "ListBox\\main.cpp",
-              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\ListBox\\main.cpp",
-              "RelativeToolTip": "ListBox\\main.cpp",
-              "ViewState": "AgIAADMAAAAAAAAAAAAYwCUAAAAIAAAAAAAAAA==",
+              "DocumentMoniker": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\Calc\\main.cpp",
+              "RelativeDocumentMoniker": "Calc\\main.cpp",
+              "ToolTip": "C:\\Users\\Hrapraiter\\source\\repos\\Hrapraiter\\WinAPI\\Calc\\main.cpp",
+              "RelativeToolTip": "Calc\\main.cpp",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-12-27T16:09:32.751Z",
+              "WhenOpened": "2026-01-10T16:22:52.237Z",
               "EditorCaption": ""
             }
           ]
