@@ -3,21 +3,65 @@
 #include<Windows.h>
 #include<vector>
 #include<functional>
-#include<string>::std::stoi
-#include"algorithm"::std::for_each
+#include<string>
+#include<strsafe.h>
 
 #include"PointCollection.h"
 #include"resource.h"
 
+/////////////////////////////////////////////////////////////////////////////////
+#define BUTTON_SIZE			  40
+#define isNumber(elem)  ( (elem) >= '0' && (elem) <= '9' )
+/////////////////////////////////////////////////////////////////////////////////
+
+#define	EDIT				1001
+
+#define	BUTTON_NULL			1002
+#define	BUTTON_ONE			1003
+#define	BUTTON_TWO			1004
+#define	BUTTON_THREE		1005
+#define	BUTTON_FOUR			1006
+#define	BUTTON_FIVE			1007
+#define	BUTTON_SIX			1008
+#define	BUTTON_SEVEN		1009
+#define	BUTTON_EIGHT		1010
+#define	BUTTON_NINE			1011
+
+#define BUTTON_POINT		1018
+//#define BUTTON_PRIORITY		1019
+
+#define	BUTTON_PLUS			1020
+#define BUTTON_MINUS		1021
+#define	BUTTON_MULTIPLY		1022
+#define BUTTON_DIVIDE		1023
+
+#define BUTTON_RESULT		1025
+
+#define BUTTON_BACKSPACE	1030
+#define BUTTON_CLEAR		1031
+#define BUTTON_DEBUG		1032
 
 
+/////////////////////////////////////////////////////////////////////////////////
+
+CONST CHAR valid_values[] = "+-/*. ";
+CONST CHAR operators_validate[] = "+-/*";
+CONST CHAR int_operators[] = "+-";
+
+/////////////////////////////////////////////////////////////////////////////////
 std::vector<CHAR*> debug_messages = {};
+
 void clearDebug();
 void addMessage(CHAR* message);
+
+bool isValue(CONST CHAR valid_vales[], const CHAR value);
+void add_edit_value(HWND& hEdit, char value);
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 INT WINAPI WinMain(HINSTANCE hInstance , HINSTANCE hPrevInst , LPSTR lpCmdLine , INT nCmdShow)
 {
 	WNDCLASSEX wClass;
@@ -81,30 +125,6 @@ INT WINAPI WinMain(HINSTANCE hInstance , HINSTANCE hPrevInst , LPSTR lpCmdLine ,
 	clearDebug();
 	return msg.wParam;
 }
-enum WndElem
-{
-	EDIT = 1001 ,
-	
-	BUTTON_NULL = 1002, 
-	BUTTON_ONE = 1003,
-	BUTTON_TWO  = 1004,
-	BUTTON_THREE  = 1005,
-	BUTTON_FOUR  = 1006,
-	BUTTON_FIVE = 1007,
-	BUTTON_SIX = 1008,
-	BUTTON_SEVEN = 1009,
-	BUTTON_EIGHT = 1010,
-	BUTTON_NINE = 1011,
-
-	BUTTON_PLUS = 1020, BUTTON_MINUS = 1021,
-	BUTTON_MULTIPLY = 1022 , BUTTON_DIVIDE = 1023,
-
-	BUTTON_RESULT = 1024,
-	
-	BUTTON_BACKSPACE = 1030, BUTTON_CLEAR = 1031,
-
-	BUTTON_DEBUG
-};
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -113,7 +133,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
-
+		//////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////
 		PointCollection number_points;
 		number_points.addPoint("Button_Null", 80, 270);
 
@@ -126,9 +147,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		number_points.addPoint("Button_Seven", 30, 220);
 		number_points.addPoint("Button_Eight", 80, 220);
 		number_points.addPoint("Button_Nine", 130, 220);
+		number_points.addPoint("Button_Point", 130, 270);
 
 		number_points.SelectX([](int x) { return x + 30; });
 		number_points.SelectY([](int y) { return y; });
+		//////////////////////////////////////////////////////////////////////////
 		//Edit			-> Edit
 		CreateWindowEx
 		(
@@ -143,6 +166,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		//Button_point		-> Button
+		CreateWindowEx
+		(
+			NULL,
+			"Button",
+			".",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
+			number_points["Button_Point"]->x, number_points["Button_Point"]->y,
+			BUTTON_SIZE, BUTTON_SIZE,
+			hwnd,
+			(HMENU)BUTTON_POINT,
+			GetModuleHandle(NULL),
+			NULL
+		);
+		//////////////////////////////////////////////////////////////////////////
 		//Button_Null		-> Button
 		CreateWindowEx
 		(
@@ -151,7 +189,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"0",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[0]->x, number_points[0]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_NULL,
 			GetModuleHandle(NULL),
@@ -165,7 +203,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"1",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[1]->x, number_points[1]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_ONE,
 			GetModuleHandle(NULL),
@@ -179,7 +217,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"2",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[2]->x, number_points[2]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_TWO,
 			GetModuleHandle(NULL),
@@ -193,7 +231,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"3",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[3]->x, number_points[3]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_THREE,
 			GetModuleHandle(NULL),
@@ -207,7 +245,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"4",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[4]->x, number_points[4]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_FOUR,
 			GetModuleHandle(NULL),
@@ -221,7 +259,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"5",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[5]->x, number_points[5]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_FIVE,
 			GetModuleHandle(NULL),
@@ -235,7 +273,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"6",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[6]->x, number_points[6]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_SIX,
 			GetModuleHandle(NULL),
@@ -249,7 +287,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"7",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[7]->x, number_points[7]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_SEVEN,
 			GetModuleHandle(NULL),
@@ -263,7 +301,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"8",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[8]->x, number_points[8]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_EIGHT,
 			GetModuleHandle(NULL),
@@ -277,13 +315,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			"9",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_CENTER,
 			number_points[9]->x, number_points[9]->y,
-			40, 40,
+			BUTTON_SIZE, BUTTON_SIZE,
 			hwnd,
 			(HMENU)BUTTON_NINE,
 			GetModuleHandle(NULL),
 			NULL
 		);
-
+		
+		//////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////
 		PointCollection operators_points;
 		operators_points.addPoint("Button_Divide", 50, 50);
 		operators_points.addPoint("Button_Multiply", 50, 100);
@@ -293,6 +333,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		operators_points.SelectX([](int x) {return x + 180; });
 		operators_points.SelectY([](int y) {return y + 20; });
+		
 		//Button_Multiply   -> Button
 		CreateWindowEx
 		(
@@ -417,85 +458,49 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CHAR sz_buffer_edit[MAX_PATH] = {};
 		SendMessage(hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)sz_buffer_edit);
 
-		std::function<void(char value)> add_edit_value = [&hEdit , &sz_buffer_edit](char value)
-			{
-				/*
-				
-				if(GetFocus() == hEdit)
-				{
-					int index = SendMessage(hEdit, EM_GETSEL, 0, 0);
-					CHAR part1[MAX_PATH] = {};
-					CHAR part2[MAX_PATH] = {};
+		int sz_buffer_edit_len = lstrlen(sz_buffer_edit);
 
-					int sz_buffer_edit_len = lstrlen(sz_buffer_edit);
-					for(int i = 0; i < sz_buffer_edit_len;++i)
-					{
-						if(i <= index)
-						{
-							wsprintf(part1, "%s%c", part1, sz_buffer_edit[i]);
-							continue;
-						}
-						wsprintf(part2, "%s%c", part2, sz_buffer_edit[i]);
-					}
-					wsprintf(sz_buffer_edit, "%s%c%s", part1, value, part2);
-				}
+		CHAR last_elem = sz_buffer_edit[sz_buffer_edit_len-1];
 
-				*/
-				wsprintf(sz_buffer_edit, "%s%c", sz_buffer_edit, value);
-				SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer_edit);
-			};
+		
 		switch (LOWORD(wParam))
 		{
 		
-		case BUTTON_NULL: add_edit_value('0');break;
-		case BUTTON_ONE:  add_edit_value('1');break;
-		case BUTTON_TWO:  add_edit_value('2');break;
-		case BUTTON_THREE:add_edit_value('3');break;
-		case BUTTON_FOUR: add_edit_value('4');break;
-		case BUTTON_FIVE: add_edit_value('5');break;
-		case BUTTON_SIX:  add_edit_value('6');break;
-		case BUTTON_SEVEN:add_edit_value('7');break;
-		case BUTTON_EIGHT:add_edit_value('8');break;
-		case BUTTON_NINE: add_edit_value('9');break;
+		case BUTTON_NULL: add_edit_value(hEdit ,'0');break;
+		case BUTTON_ONE:  add_edit_value(hEdit ,'1');break;
+		case BUTTON_TWO:  add_edit_value(hEdit ,'2');break;
+		case BUTTON_THREE:add_edit_value(hEdit ,'3');break;
+		case BUTTON_FOUR: add_edit_value(hEdit, '4');break;
+		case BUTTON_FIVE: add_edit_value(hEdit, '5');break;
+		case BUTTON_SIX:  add_edit_value(hEdit ,'6');break;
+		case BUTTON_SEVEN:add_edit_value(hEdit ,'7');break;
+		case BUTTON_EIGHT:add_edit_value(hEdit ,'8');break;
+		case BUTTON_NINE: add_edit_value(hEdit ,'9');break;
 
+		case BUTTON_POINT: add_edit_value(hEdit, '.');break;
 
-		case BUTTON_DIVIDE:  add_edit_value('/');break;
-		case BUTTON_MULTIPLY:add_edit_value('*');break;
-		case BUTTON_PLUS:    add_edit_value('+');break;
-		case BUTTON_MINUS:   add_edit_value('-');break;
+		case BUTTON_DIVIDE:  add_edit_value(hEdit ,'/');break;
+		case BUTTON_MULTIPLY:add_edit_value(hEdit ,'*');break;
+		case BUTTON_PLUS:    add_edit_value(hEdit ,'+');break;
+		case BUTTON_MINUS:   add_edit_value(hEdit ,'-');break;
 
 
 		case BUTTON_RESULT:
 		{
-			CHAR sz_buffer[MAX_PATH] = {};
-			SendMessage(hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)sz_buffer);
-			int sz_buffer_len = lstrlen(sz_buffer);
+			///////////////////////////////сбор и инициализация данных////////////////////////////////////////////////
 
-			if (sz_buffer_len <= 0)
+			if (sz_buffer_edit_len <= 0)
 			{
 				MessageBox(hwnd, "Строка пуста.", "Error", MB_ICONERROR);
 				break;
 			}
-
-			// проверка является ли елемент одним из группы символов
-			bool(*isValue)(CHAR valid_vales[], CHAR value) = [](CHAR valid_vales[], CHAR value)
-				{
-					int len = lstrlen(valid_vales);
-					for (int i = 0; i < len; ++i)
-						if (value == valid_vales[i])
-							return true;
-					return false;
-				};
-			// сокращение через лямбду
-			bool(*isNumber)(CHAR elem) = [](CHAR elem) {return elem >= '0' && elem <= '9'; };
+			//////////////////////////////////////////////////////////////////////////////////////////////
 			
-			CHAR valid_values[MAX_PATH] = "+-/* ";
 
-			// валидация на буквы и запрещенные символы
 			bool isFind_warning_value = false;
-			for (int i = 0; i < sz_buffer_len; ++i)
+			for (int i = 0; i < sz_buffer_edit_len; ++i)
 			{
-				if (not(sz_buffer[i] >= '0' && sz_buffer[i] <= '9' || isValue(valid_values, sz_buffer[i])))
+				if (not(sz_buffer_edit[i] >= '0' && sz_buffer_edit[i] <= '9' || isValue(valid_values, sz_buffer_edit[i])))
 				{
 					MessageBox(hwnd, "В строке присутсвуют буквы или запрещенные символы", "Error", MB_ICONERROR);
 					isFind_warning_value = true;
@@ -504,76 +509,95 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			if (isFind_warning_value)break;
 
-			std::vector<int> numbers;
+
+			std::vector<long double> numbers;
 			std::vector<CHAR> operators;
 			
-			CHAR operators_validate[MAX_PATH] = "+-/*";
-			CHAR int_operators[MAX_PATH] = "+-";
-
-			bool isStart = isNumber(sz_buffer[0]) || isValue(int_operators, sz_buffer[0]) && isNumber(sz_buffer[1]);
-			// тут косяк
-			for (int i = 0, start_num_point = isStart ? 0 : -1, end_num_point = -1; i < sz_buffer_len - 1; ++i)
+			//////////////////////////////////блок разборки строки на символы/////////////////////////////////////////
+			bool isStart = isNumber(sz_buffer_edit[0]) || (isValue(int_operators, sz_buffer_edit[0]) && isNumber(sz_buffer_edit[1]));
+			for (int i = 0, start_num_point = isStart ? 0 : -1, end_num_point = -1; i < sz_buffer_edit_len - 1; ++i)
 			{
 				
-				if (isValue(operators_validate, sz_buffer[i]) && not isNumber(sz_buffer[i + 1])) 
+				if (isValue(operators_validate, sz_buffer_edit[i]) && not isNumber(sz_buffer_edit[i + 1])) 
 				{
 					// оператор на конце строки условие не считает но оно и не нужно  пример "66 + 66 +" 
 					// в итоге плюс на самом конце строки несчитает 
 					// а если "66 + 66 + " то считает но выдаст ошибку через условие ниже
-					operators.push_back(sz_buffer[i]);
+					operators.push_back(sz_buffer_edit[i]);
 
 					CHAR* message = new CHAR[MAX_PATH];
 					wsprintf(message, "operators [ %d ] -> %c", operators.size() - 1, operators[operators.size()-1]);
 					addMessage(message);
 					message = nullptr;
 				}
+				
+				if (not isNumber(sz_buffer_edit[i]) && sz_buffer_edit[i] != '.' && isNumber(sz_buffer_edit[i + 1]))
+					start_num_point = isValue(int_operators , sz_buffer_edit[i]) ? i : i + 1;
+
+				else if (isNumber(sz_buffer_edit[i]) && not isNumber(sz_buffer_edit[i + 1]) && sz_buffer_edit[i+1] != '.')
+					end_num_point = i;
+
 				if (
+					
 					start_num_point != -1 &&
 					end_num_point != -1
 					
-					||
 
+					||
+					
+					
+					start_num_point != -1 &&
 					end_num_point == -1 &&
-					i+1 == sz_buffer_len-1 &&
-					isNumber(sz_buffer[i+1]) &&
+					i + 1 == sz_buffer_edit_len - 1 &&
+					isNumber(sz_buffer_edit[i + 1]) &&
 					(end_num_point = i + 1) == i + 1
 					
+
 					)
-				
+
 				{
-					//тут косяк 
 					CHAR number_buffer[MAX_PATH] = {};
-					
+
 					for (int point = start_num_point; point <= end_num_point; ++point)
-						wsprintf(number_buffer, "%s%c", number_buffer, sz_buffer[point]);
+						wsprintf(number_buffer, "%s%c", number_buffer, sz_buffer_edit[point]);
 
 					start_num_point = -1;
 					end_num_point = -1;
 
-					//numbers.push_back(std::stoi(number_buffer));
+					numbers.push_back(std::stod(number_buffer));
 
 					CHAR* message = new CHAR[MAX_PATH];
-					wsprintf(message, "numbers  -> %s", number_buffer);
-					//wsprintf(message, "numbers [ %d ] -> %d", numbers.size() - 1, numbers[numbers.size() - 1]);
+					//StringCchPrintf(message,MAX_PATH, "numbers  -> %s", number_buffer);
+					StringCchPrintf(message,MAX_PATH, "numbers [ %d ] -> %.2f", numbers.size() - 1, numbers[numbers.size() - 1]);
 					addMessage(message);
 					message = nullptr;
 				}
-
-				if (not isNumber(sz_buffer[i]) && not isValue(int_operators , sz_buffer[i]) && isNumber(sz_buffer[i + 1]))
-					start_num_point = i + 1;
-
-				else if (isNumber(sz_buffer[i]) && not isNumber(sz_buffer[i + 1]) && not isValue(int_operators , sz_buffer[i+1]))
-					end_num_point = i;
+				
 			}
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////
 			if (not(numbers.size() - 1 == operators.size()))
 			{
 				MessageBox(hwnd, "Пропущена цифра или оператор", "Error", MB_ICONERROR);
 				break;
 			}
+
+			long double result = numbers[0];
+			for(int i = 1; i < numbers.size();++i)
+			{
+				switch(operators[i-1])
+				{
+				case '+':result += numbers[i];break;
+				case '-':result -= numbers[i];break;
+				case '*':result *= numbers[i];break;
+				case '/':result /= numbers[i];break;
+				}
+			}
+			CHAR result_output[MAX_PATH];
+			
+			StringCchPrintf(result_output, MAX_PATH, "%.2f", result);
+			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)result_output);
 		}
 		break;
-
-
 
 		case BUTTON_BACKSPACE:
 		{
@@ -643,6 +667,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	return FALSE;
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 void clearDebug()
 {
 	for(CHAR* elem : debug_messages)
@@ -654,3 +680,40 @@ void addMessage(CHAR* message)
 	debug_messages.push_back(message);
 	message = nullptr;
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool isValue(CONST CHAR valid_vales[], const CHAR value)
+{
+		int len = lstrlen(valid_vales);
+		for (int i = 0; i < len; ++i)
+			if (value == valid_vales[i])
+				return true;
+		return false;
+};
+
+void add_edit_value(HWND& hEdit ,char value)
+{
+	CHAR sz_buffer_edit[MAX_PATH] = {};
+	SendMessage(hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)sz_buffer_edit);
+	int sz_buffer_edit_len = lstrlen(sz_buffer_edit);
+
+	CHAR last_elem = sz_buffer_edit[sz_buffer_edit_len - 1];
+
+	if (not isNumber(last_elem) && value == '.')return;
+
+	if (last_elem == '.' && not isNumber(value))
+	{
+		sz_buffer_edit[sz_buffer_edit_len++] = '0';
+		sz_buffer_edit[sz_buffer_edit_len++] = '0';
+		sz_buffer_edit[sz_buffer_edit_len++] = ' ';
+	}
+
+	if (isNumber(last_elem) && isValue(operators_validate, value) ||
+		isValue(operators_validate, last_elem) && last_elem != '-' && isNumber(value))
+
+		sz_buffer_edit[sz_buffer_edit_len++] = ' ';
+
+	sz_buffer_edit[sz_buffer_edit_len++] = value;
+	SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer_edit);
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 #pragma once
-#include<Windows.h>::INT
+#include<Windows.h>
 #include<vector>
-#include<functional>::std::function
+#include<functional>
 #include<memory>
 
 struct Point
