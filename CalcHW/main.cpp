@@ -57,6 +57,8 @@ void addMessage(CHAR* message);
 bool isValue(CONST CHAR valid_vales[], const CHAR value);
 void add_edit_value(HWND& hEdit, char value);
 
+CHAR* match_str_algo(CHAR* str);
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -485,135 +487,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case BUTTON_MINUS:   add_edit_value(hEdit ,'-');break;
 
 
-		case BUTTON_RESULT:
+		case BUTTON_RESULT:// без скобок логика пока такая
 		{
-			///////////////////////////////сбор и инициализация данных////////////////////////////////////////////////
-
-			if (sz_buffer_edit_len <= 0)
-			{
-				MessageBox(hwnd, "Строка пуста.", "Error", MB_ICONERROR);
+			CHAR* str = match_str_algo(sz_buffer_edit);
+			
+			if (not str)
 				break;
-			}
-			//////////////////////////////////////////////////////////////////////////////////////////////
+
+			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)str);
 			
-
-			bool isFind_warning_value = false;
-			for (int i = 0; i < sz_buffer_edit_len; ++i)
-			{
-				if (not(sz_buffer_edit[i] >= '0' && sz_buffer_edit[i] <= '9' || isValue(valid_values, sz_buffer_edit[i])))
-				{
-					MessageBox(hwnd, "В строке присутсвуют буквы или запрещенные символы", "Error", MB_ICONERROR);
-					isFind_warning_value = true;
-					break;
-				}
-			}
-			if (isFind_warning_value)break;
-
-
-			std::vector<long double> numbers;
-			std::vector<CHAR> operators;
-			
-			//////////////////////////////////блок разборки строки на символы/////////////////////////////////////////
-			bool isStart = isNumber(sz_buffer_edit[0]) || (isValue(int_operators, sz_buffer_edit[0]) && isNumber(sz_buffer_edit[1]));
-			for (int i = 0, start_num_point = isStart ? 0 : -1, end_num_point = -1; i < sz_buffer_edit_len - 1; ++i)
-			{
-				
-				if (isValue(operators_validate, sz_buffer_edit[i]) && not isNumber(sz_buffer_edit[i + 1])) 
-				{
-					// оператор на конце строки условие не считает но оно и не нужно  пример "66 + 66 +" 
-					// в итоге плюс на самом конце строки несчитает 
-					// а если "66 + 66 + " то считает но выдаст ошибку через условие ниже
-					operators.push_back(sz_buffer_edit[i]);
-
-					CHAR* message = new CHAR[MAX_PATH];
-					wsprintf(message, "operators [ %d ] -> %c", operators.size() - 1, operators[operators.size()-1]);
-					addMessage(message);
-					message = nullptr;
-				}
-				
-				if (not isNumber(sz_buffer_edit[i]) && sz_buffer_edit[i] != '.' && isNumber(sz_buffer_edit[i + 1]))
-					start_num_point = isValue(int_operators , sz_buffer_edit[i]) ? i : i + 1;
-
-				else if (isNumber(sz_buffer_edit[i]) && not isNumber(sz_buffer_edit[i + 1]) && sz_buffer_edit[i+1] != '.')
-					end_num_point = i;
-
-				if (
-					
-					start_num_point != -1 &&
-					end_num_point != -1
-					
-
-					||
-					
-					
-					start_num_point != -1 &&
-					end_num_point == -1 &&
-					i + 1 == sz_buffer_edit_len - 1 &&
-					isNumber(sz_buffer_edit[i + 1]) &&
-					(end_num_point = i + 1) == i + 1
-					
-
-					)
-
-				{
-					CHAR number_buffer[MAX_PATH] = {};
-
-					for (int point = start_num_point; point <= end_num_point; ++point)
-						wsprintf(number_buffer, "%s%c", number_buffer, sz_buffer_edit[point]);
-
-					start_num_point = -1;
-					end_num_point = -1;
-
-					numbers.push_back(std::stod(number_buffer));
-
-					CHAR* message = new CHAR[MAX_PATH];
-					//StringCchPrintf(message,MAX_PATH, "numbers  -> %s", number_buffer);
-					StringCchPrintf(message,MAX_PATH, "numbers [ %d ] -> %.2f", numbers.size() - 1, numbers[numbers.size() - 1]);
-					addMessage(message);
-					message = nullptr;
-				}
-				
-			}
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////
-			if (not(numbers.size() - 1 == operators.size()))
-			{
-				MessageBox(hwnd, "Пропущена цифра или оператор", "Error", MB_ICONERROR);
-				break;
-			}
-
-			long double result = numbers[0];
-			for(int i = 1; i < numbers.size();++i)
-			{
-				switch(operators[i-1])
-				{
-				case '+':result += numbers[i];break;
-				case '-':result -= numbers[i];break;
-				case '*':result *= numbers[i];break;
-				case '/':result /= numbers[i];break;
-				}
-			}
-			CHAR result_output[MAX_PATH];
-			
-			StringCchPrintf(result_output, MAX_PATH, "%.2f", result);
-			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)result_output);
+			delete[] str;
+			str = nullptr;	
 		}
 		break;
-
 		case BUTTON_BACKSPACE:
-		{
-			CHAR sz_buffer[MAX_PATH] = {};
-			CHAR sz_new_text[MAX_PATH] = {};
-
-			SendMessage(hEdit, WM_GETTEXT, MAX_PATH, (LPARAM)sz_buffer);
-			int sz_buffer_len = lstrlen(sz_buffer);
-
-			if (sz_buffer_len <= 0)break;
-
-			sz_buffer[sz_buffer_len - 1] = NULL;
-			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
-		}
-		break;
-			
+			if (sz_buffer_edit_len < 1)break;
+			sz_buffer_edit[--sz_buffer_edit_len] = 0;
+			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer_edit);
+			break;
 		case BUTTON_CLEAR:
 			SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)"");
 			break;
@@ -717,3 +608,117 @@ void add_edit_value(HWND& hEdit ,char value)
 	SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer_edit);
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+CHAR* match_str_algo(CHAR* str)
+{// реализованно как отдельный метод для добавления  логики под () в калькуляторе
+	///////////////////////////////сбор и инициализация данных////////////////////////////////////////////////
+	int str_len = lstrlen(str);
+	if (str_len <= 0)
+	{
+		MessageBox(NULL, "Строка пуста.", "Error", MB_ICONERROR);
+		return nullptr;
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	bool isFind_warning_value = false;
+	for (int i = 0; i < str_len; ++i)
+	{
+		if (not(str[i] >= '0' && str[i] <= '9' || isValue(valid_values, str[i])))
+		{
+			MessageBox(NULL, "В строке присутсвуют буквы или запрещенные символы", "Error", MB_ICONERROR);
+			isFind_warning_value = true;
+			return nullptr;
+		}
+	}
+
+	std::vector<long double> numbers;
+	std::vector<CHAR> operators;
+
+	//////////////////////////////////блок разборки строки на символы/////////////////////////////////////////
+	bool isStart = isNumber(str[0]) || (isValue(int_operators, str[0]) && isNumber(str[1]));
+	for (int i = 0, start_num_point = isStart ? 0 : -1, end_num_point = -1; i < str_len - 1; ++i)
+	{
+
+		if (isValue(operators_validate, str[i]) && not isNumber(str[i + 1]))
+		{
+			// оператор на конце строки условие не считает но оно и не нужно  пример "66 + 66 +" 
+			// в итоге плюс на самом конце строки несчитает 
+			// а если "66 + 66 + " то считает но выдаст ошибку через условие ниже
+			operators.push_back(str[i]);
+
+			CHAR* message = new CHAR[MAX_PATH];
+			wsprintf(message, "operators [ %d ] -> %c", operators.size() - 1, operators[operators.size() - 1]);
+			addMessage(message);
+			message = nullptr;
+		}
+
+		if (not isNumber(str[i]) && str[i] != '.' && isNumber(str[i + 1]))
+			start_num_point = isValue(int_operators, str[i]) ? i : i + 1;
+
+		else if (isNumber(str[i]) && not isNumber(str[i + 1]) && str[i + 1] != '.')
+			end_num_point = i;
+
+		if (
+
+			start_num_point != -1 &&
+			end_num_point != -1
+
+
+			||
+
+
+			start_num_point != -1 &&
+			end_num_point == -1 &&
+			i + 1 == str_len - 1 &&
+			isNumber(str[i + 1]) &&
+			(end_num_point = i + 1) == i + 1
+
+
+			)
+
+		{
+			CHAR number_buffer[MAX_PATH] = {};
+			int number_buffer_len = lstrlen(number_buffer);
+
+			for (int point = start_num_point; point <= end_num_point; ++point)
+				number_buffer[number_buffer_len++] = str[point];
+
+			start_num_point = -1;
+			end_num_point = -1;
+
+			numbers.push_back(std::stod(number_buffer));
+
+			CHAR* message = new CHAR[MAX_PATH];
+			//StringCchPrintf(message,MAX_PATH, "numbers  -> %s", number_buffer);
+			StringCchPrintf(message, MAX_PATH, "numbers [ %d ] -> %.2f", numbers.size() - 1, numbers[numbers.size() - 1]);
+			addMessage(message);
+			message = nullptr;
+		}
+
+	}
+	str = nullptr;
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if (not(numbers.size() - 1 == operators.size()))
+	{
+		MessageBox(NULL, "Пропущена цифра или оператор", "Error", MB_ICONERROR);
+		return nullptr;
+	}
+
+	long double result = numbers[0];
+	for (int i = 1; i < numbers.size(); ++i)
+	{
+		switch (operators[i - 1])
+		{
+		case '+':result += numbers[i]; break;
+		case '-':result -= numbers[i]; break;
+		case '*':result *= numbers[i]; break;
+		case '/':result /= numbers[i]; break;
+		}
+	}
+	CHAR* result_output = new CHAR[MAX_PATH];
+
+	StringCchPrintf(result_output, MAX_PATH, "%.2f", result);
+	return result_output;
+}
