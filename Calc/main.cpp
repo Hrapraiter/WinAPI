@@ -204,7 +204,7 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		CHAR sz_display[MAX_PATH] = {};
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_DISPLAY);
 		SendMessage(hEditDisplay, WM_GETTEXT, MAX_PATH, (LPARAM)sz_display);
-		
+
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
 			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + '0';
@@ -222,8 +222,43 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 			break;
 		}
-		
+		void (*add_simbol)(HWND&, CHAR*, const CHAR*) = [](HWND& hEditDisplay, CHAR* sz_display, const CHAR* str)
+			{
+				strcat(sz_display, str);
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+			};
 
+		int len = lstrlen(sz_display);
+		switch (LOWORD(wParam))
+		{
+		case IDC_BUTTON_ASTER:	add_simbol(hEditDisplay, sz_display, "*");	break;
+		case IDC_BUTTON_SLASH:	add_simbol(hEditDisplay, sz_display, "/");	break;
+		case IDC_BUTTON_PLUS:	add_simbol(hEditDisplay, sz_display, "+");	break;
+		case IDC_BUTTON_MINUS:	add_simbol(hEditDisplay, sz_display, "-");	break;
+
+
+		case IDC_BUTTON_BSP:
+		{
+			if (len <= 0 || len ==1 && sz_display[0] == '0')break;
+			if (len == 1 && sz_display[0] != '0')
+			{
+				SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_CLR), 0);
+				break;
+			}
+			sz_display[len - 1] = 0;
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+		}
+		break;
+		case IDC_BUTTON_CLR:
+		{
+			if (len == 1 && sz_display[0] == '0')break;
+			
+			strcpy(sz_display, "0");
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+		}
+		break;
+		}
+	
 	}
 	break;
 	case WM_KEYDOWN:
@@ -231,10 +266,19 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		CHAR sz_key[8] = {};
 		sprintf(sz_key, "%i" , wParam);
 		std::cout << sz_key << '\n';
-		if(GetKeyState(VK_SHIFT) < 0 && wParam == '8')
+
+		if (GetKeyState(VK_LSHIFT) < 0)
 		{
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, NULL);
-			break;
+			if (wParam == '8')
+			{
+				SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, NULL);
+				break;
+			}
+			if (wParam == VK_OEM_PLUS)
+			{
+				SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, TRUE, NULL);
+				break;
+			}
 		}
 		if (wParam >= '0' &&  wParam <= '9')
 		{
@@ -249,19 +293,41 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		
 		switch(wParam)
 		{
-		case VK_OEM_PLUS:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, TRUE, 0); break;
+		case VK_BACK: SendMessage(GetDlgItem(hwnd, IDC_BUTTON_BSP), BM_SETSTATE, TRUE, NULL); break;
+		case VK_ESCAPE: SendMessage(GetDlgItem(hwnd, IDC_BUTTON_CLR), BM_SETSTATE, TRUE, 0); break;
+		case VK_MULTIPLY:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0); break;
+		case VK_DIVIDE:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_SLASH), BM_SETSTATE, TRUE, 0); break;
+
+		case VK_OEM_PLUS:
+		case VK_RETURN:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_EQUAL), BM_SETSTATE, TRUE, 0); break;
+
+		case VK_ADD:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, TRUE, 0); break;
+
+		case VK_SUBTRACT:
 		case VK_OEM_MINUS:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE, TRUE, 0); break;
 		
+		case VK_OEM_PERIOD:
+		case VK_DECIMAL:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_POINT), BM_SETSTATE, TRUE, 0); break;
 		}
+		
 	}
 	break;
 	case WM_KEYUP:
 	{
-		if (GetKeyState(VK_SHIFT) < 0 && wParam == '8')
+		if (GetKeyState(VK_SHIFT) < 0)
 		{
-			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, FALSE, NULL);
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_ASTER), 0);
-			break;
+			if (wParam == '8')
+			{
+				SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, FALSE, NULL);
+				SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_ASTER), 0);
+				break;
+			}
+			if (wParam == VK_OEM_PLUS)
+			{
+				SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, FALSE, NULL);
+				SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_PLUS), 0);
+				break;
+			}
 		}
 		if(wParam >= '0' && wParam <= '9')
 		{
@@ -273,6 +339,42 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		{
 			SendMessage(GetDlgItem(hwnd, wParam - VK_NUMPAD0 + IDC_BUTTON_0), BM_SETSTATE, FALSE, NULL);
 			SendMessage(hwnd, WM_COMMAND, LOWORD(wParam - VK_NUMPAD0 + IDC_BUTTON_0), 0);
+			break;
+		}
+		void (*sendCommand)(HWND&, const size_t) = [](HWND& hwnd, const size_t ResourceID)
+			{
+				SendMessage(GetDlgItem(hwnd, ResourceID), BM_SETSTATE, FALSE, 0);
+				SendMessage(hwnd, WM_COMMAND, LOWORD(ResourceID), 0);
+			};
+		switch (wParam)
+		{
+		case VK_BACK: sendCommand(hwnd, IDC_BUTTON_BSP); break;
+		case VK_ESCAPE: sendCommand(hwnd , IDC_BUTTON_CLR); break;
+		case VK_MULTIPLY:sendCommand(hwnd, IDC_BUTTON_ASTER); break;
+
+		case VK_OEM_2:
+		case VK_DIVIDE:sendCommand(hwnd, IDC_BUTTON_SLASH); break;
+
+		case VK_OEM_PLUS:
+		case VK_RETURN:sendCommand(hwnd, IDC_BUTTON_EQUAL); break;
+		
+		
+		case VK_ADD:sendCommand(hwnd, IDC_BUTTON_PLUS); break;
+		
+		case VK_SUBTRACT:
+		case VK_OEM_MINUS:sendCommand(hwnd, IDC_BUTTON_MINUS); break;
+		
+		case VK_OEM_PERIOD:
+		case VK_DECIMAL:sendCommand(hwnd, IDC_BUTTON_POINT); break;
+		}
+		if (wParam == VK_SPACE)
+		{
+			//MessageBox(NULL, "Я работаю", "P.S Space", MB_OK | MB_ICONINFORMATION);
+			CHAR sz_display[MAX_PATH] = {};
+			HWND hEditDisplay = GetDlgItem(hwnd, IDC_DISPLAY);
+			SendMessage(hEditDisplay, WM_GETTEXT, MAX_PATH, (LPARAM)sz_display);
+			strcat(sz_display, " ");
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 			break;
 		}
 	}
