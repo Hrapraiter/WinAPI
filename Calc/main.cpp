@@ -200,6 +200,12 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		break;
 	case WM_COMMAND:
 	{
+		static DOUBLE	a = DBL_MIN, b = DBL_MIN; // -(2^64)/2
+		static INT		operation = 0;
+		static BOOL		input = FALSE; // Отслеживает ввод цифрв
+		static BOOL		input_operation = FALSE; // Отслежвает ввод операции
+
+
 		CHAR sz_digit[2] = {};
 		CHAR sz_display[MAX_PATH] = {};
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_DISPLAY);
@@ -207,19 +213,24 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
+			input_operation = FALSE;
+			if (input == FALSE)ZeroMemory(sz_display, sizeof(sz_display));
 			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + '0';
 			if (sz_display[0] == '0' && sz_display[1] != '.')
 				strcpy(sz_display, sz_digit);
 			else
 				strcat(sz_display, sz_digit);
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+			input = TRUE;
 			break;
 		}
 		if (LOWORD(wParam) == IDC_BUTTON_POINT)
 		{
+			input_operation = FALSE;
 			if (strchr(sz_display, '.'))break;
 			strcat(sz_display, ".");
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+			input = TRUE;
 			break;
 		}
 		void (*add_simbol)(HWND&, CHAR*, const CHAR*) = [](HWND& hEditDisplay, CHAR* sz_display, const CHAR* str)
@@ -228,35 +239,57 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 			};
 
-		int len = lstrlen(sz_display);
-		switch (LOWORD(wParam))
-		{
+		/*
 		case IDC_BUTTON_ASTER:	add_simbol(hEditDisplay, sz_display, "*");	break;
 		case IDC_BUTTON_SLASH:	add_simbol(hEditDisplay, sz_display, "/");	break;
 		case IDC_BUTTON_PLUS:	add_simbol(hEditDisplay, sz_display, "+");	break;
 		case IDC_BUTTON_MINUS:	add_simbol(hEditDisplay, sz_display, "-");	break;
-
-
-		case IDC_BUTTON_BSP:
+		*/
+		if(LOWORD(wParam) == IDC_BUTTON_BSP)
 		{
-			if (len <= 0 || len ==1 && sz_display[0] == '0')break;
-			if (len == 1 && sz_display[0] != '0')
+			sz_display[lstrlen(sz_display) - 1] = 0;
+			if (sz_display[0] == 0)sz_display[0] = '0';
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+			break;
+		}
+		if(LOWORD(wParam) ==  IDC_BUTTON_CLR)
+		{
+			a = DBL_MIN, b = DBL_MIN; // -(2^64)/2
+			operation = 0;
+			input = FALSE;
+			input_operation = FALSE;
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)"0");
+			break;
+		}
+		if (LOWORD(wParam) >= IDC_BUTTON_PLUS && LOWORD(wParam) <= IDC_BUTTON_SLASH)
+		{
+			if(input)
 			{
-				SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_CLR), 0);
-				break;
+				(a == DBL_MIN ? a : b) = atof(sz_display);
+				input = FALSE;
 			}
-			sz_display[len - 1] = 0;
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+			operation = LOWORD(wParam);
+			input_operation = TRUE;
 		}
-		break;
-		case IDC_BUTTON_CLR:
+		if(LOWORD(wParam) == IDC_BUTTON_EQUAL)
 		{
-			if (len == 1 && sz_display[0] == '0')break;
-			
-			strcpy(sz_display, "0");
-			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
-		}
-		break;
+			if(input)
+			{
+				(a == DBL_MIN ? a : b) = atof(sz_display);
+				input = FALSE;
+			}
+			switch(operation)
+			{
+			case IDC_BUTTON_PLUS:	a += b;	break;
+			case IDC_BUTTON_MINUS:	a -= b;	break;
+			case IDC_BUTTON_ASTER:	a *= b;	break;
+			case IDC_BUTTON_SLASH:	a /= b;	break;
+			}
+			input_operation = FALSE;
+			if (a != DBL_MIN) {
+				sprintf(sz_display, "%g", a);
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+			}
 		}
 	
 	}
