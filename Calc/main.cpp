@@ -264,12 +264,13 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 	case WM_COMMAND:
 	{
 		static DOUBLE	a = DBL_MIN, b = DBL_MIN; // DBL_MIN = -(2^64)/2
-		//static INT		operation = 0;
+		static INT		operation = 0;
 		static BOOL		input = FALSE; // Отслеживает ввод цифр
 		static BOOL		input_operation = FALSE; // Отслежвает ввод операции
+		static BOOL		executed = FALSE;
 
-		static INT		op_buf_SIZE = 0;
-		static INT		op_buffer[MAX_PATH] = {};
+		//static INT		op_buf_SIZE = 0;
+		//static INT		op_buffer[MAX_PATH] = {};
 
 
 		CHAR sz_digit[2] = {};
@@ -280,12 +281,17 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
 		{
 			input_operation = FALSE;
+			executed = FALSE;
+
 			if (input == FALSE)ZeroMemory(sz_display, sizeof(sz_display));
+			
 			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + '0';
+
 			if (sz_display[0] == '0' && sz_display[1] != '.')
 				strcpy(sz_display, sz_digit);
 			else
 				strcat(sz_display, sz_digit);
+
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 			input = TRUE;
 			break;
@@ -322,13 +328,14 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		if(LOWORD(wParam) ==  IDC_BUTTON_CLR)
 		{
 			a = DBL_MIN, b = DBL_MIN; // -(2^64)/2
-			//operation = 0;
+			operation = 0;
 			input = FALSE;
 			input_operation = FALSE;
+			executed = FALSE;
 
-			op_buf_SIZE = 0;
+			/*op_buf_SIZE = 0;
 			for (int i = 0; i < op_buf_SIZE; ++i)
-				op_buffer[i] = 0;
+				op_buffer[i] = 0;*/
 
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)"0");
 			break;
@@ -340,10 +347,11 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 				(a == DBL_MIN ? a : b) = atof(sz_display);
 				input = FALSE;
 			}
-			//operation = LOWORD(wParam);
-			op_buffer[op_buf_SIZE++] = LOWORD(wParam);;
-
+			if(not input_operation && not executed)SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0);
+			operation = LOWORD(wParam);
+			//op_buffer[op_buf_SIZE++] = LOWORD(wParam);
 			input_operation = TRUE;
+			
 		}
 		if(LOWORD(wParam) == IDC_BUTTON_EQUAL)
 		{
@@ -352,21 +360,22 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 				(a == DBL_MIN ? a : b) = atof(sz_display);
 				input = FALSE;
 			}
-			for (int i = 0; i < op_buf_SIZE; ++i)
-			{
-				switch (op_buffer[i])
+			//for (int i = 0; i < op_buf_SIZE; ++i)
+			//{
+				switch (operation)//switch (op_buffer[i])
 				{
 				case IDC_BUTTON_PLUS:	a += b;	break;
 				case IDC_BUTTON_MINUS:	a -= b;	break;
 				case IDC_BUTTON_ASTER:	a *= b;	break;
 				case IDC_BUTTON_SLASH:	a /= b;	break;
 				}
-			}
-			op_buffer[0] = op_buffer[op_buf_SIZE - 1];
+			//}
+			/*op_buffer[0] = op_buffer[op_buf_SIZE - 1];
 			for (op_buf_SIZE; op_buf_SIZE > 1; --op_buf_SIZE)
-				op_buffer[op_buf_SIZE-1] = 0;
+				op_buffer[op_buf_SIZE-1] = 0;*/
 
 			input_operation = FALSE;
+			executed = TRUE;
 			if (a != DBL_MIN) {
 				sprintf(sz_display, "%g", a);
 				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
