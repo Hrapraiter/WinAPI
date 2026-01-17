@@ -394,6 +394,7 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 				(a == DBL_MIN ? a : b) = atof(sz_display);
 				input = FALSE;
 			}
+<<<<<<< HEAD
 			//if(operation && a == DBL_MIN)a = atof(sz_display);
 			
 			//for (int i = 0; i < op_buf_SIZE; ++i)
@@ -402,6 +403,10 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 			{
 				if (b == DBL_MIN)b = a;
 
+=======
+			//for (int i = 0; i < op_buf_SIZE; ++i)
+			//{
+>>>>>>> 109d2c08e573a2cf237c875f983ffa145b7d3d43
 				switch (operation)//switch (op_buffer[i])
 				{
 				case IDC_BUTTON_PLUS:	a += b;	break;
@@ -409,6 +414,7 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 				case IDC_BUTTON_ASTER:	a *= b;	break;
 				case IDC_BUTTON_SLASH:	a /= b;	break;
 				}
+<<<<<<< HEAD
 				//}
 				/*op_buffer[0] = op_buffer[op_buf_SIZE - 1];
 				for (op_buf_SIZE; op_buf_SIZE > 1; --op_buf_SIZE)
@@ -420,6 +426,18 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 					sprintf(sz_display, "%g", a);
 					SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 				}
+=======
+			//}
+			/*op_buffer[0] = op_buffer[op_buf_SIZE - 1];
+			for (op_buf_SIZE; op_buf_SIZE > 1; --op_buf_SIZE)
+				op_buffer[op_buf_SIZE-1] = 0;*/
+
+			input_operation = FALSE;
+			executed = TRUE;
+			if (a != DBL_MIN) {
+				sprintf(sz_display, "%g", a);
+				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
+>>>>>>> 109d2c08e573a2cf237c875f983ffa145b7d3d43
 			}
 		}
 		SetFocus(hwnd);
