@@ -28,7 +28,8 @@
 
 #define img_RESIZE(size)			(size) - 4
 
-
+#define teame_Hallowen		(LPSTR)"hallowen/"
+#define teame_MetalMistral	(LPSTR)"metal_mistral/"
 #define teame_SquareBlue	(LPSTR)"square_blue/"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
