@@ -5,7 +5,7 @@
 #include<iostream>
 #include"resource.h"
 
-//#define DEBUG
+#define DEBUG
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define g_i_INTERVAL				 2
@@ -23,17 +23,24 @@
 #define BUTTON_X_POSITION(SHIFT)	g_i_BUTTON_START_X + (g_i_BUTTON_SIZE+g_i_INTERVAL)*(SHIFT)
 #define BUTTON_Y_POSITION(SHIFT)	g_i_BUTTON_START_Y + (g_i_BUTTON_SIZE+g_i_INTERVAL)*(SHIFT)
 
-#define g_i_WINDOW_WIDTH			g_i_DISPLAY_WIDTH + g_i_START_X*2 + 16
-#define g_i_WINDOW_HEIGHT			g_i_DISPLAY_HEIGHT + g_i_START_Y*2 + (g_i_BUTTON_SIZE + g_i_INTERVAL)*4 + 38 // 38 высота строки заголовка
+#define g_i_WINDOW_WIDTH			( g_i_DISPLAY_WIDTH + g_i_START_X*2 + 16 )
+#define g_i_WINDOW_HEIGHT			(g_i_DISPLAY_HEIGHT + g_i_START_Y*2 + (g_i_BUTTON_SIZE + g_i_INTERVAL)*4 + 38 ) // 38 высота строки заголовка
 
 #define img_RESIZE(size)			(size) - 4
 
-#define teame_Hallowen		(LPSTR)"hallowen/"
-#define teame_MetalMistral	(LPSTR)"metal_mistral/"
-#define teame_SquareBlue	(LPSTR)"square_blue/"
+#define teame_d_Hallowen			(LPSTR)"hallowen/"
+#define teame_d_MetalMistral		(LPSTR)"metal_mistral/"
+#define teame_d_SquareBlue			(LPSTR)"square_blue/"
+
+#define teame_ID_HALLOWEN			30000
+#define teame_ID_METALMISTRAL		30001
+#define teame_ID_SQUAREBLUE			30002
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static LPSTR teame = teame_SquareBlue;
+INT wX = 0;
+INT wY = 0;
+
+LPSTR teame = teame_d_SquareBlue;
 
 CONST CHAR g_OPERATORS[] = "+-*/";
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
@@ -70,19 +77,26 @@ INT WINAPI WinMain(HINSTANCE hInstance , HINSTANCE hPrevInst , LPSTR lpCmdLine ,
 		return 0;
 	}
 	//2) Создание окна:
+	CONST INT MONITOR_WIDTH = GetSystemMetrics(SM_CXSCREEN);
+	CONST INT MONITOR_HEIGTH = GetSystemMetrics(SM_CYSCREEN);
+
+	wX = (MONITOR_WIDTH - g_i_WINDOW_WIDTH) /2;
+	wY = (MONITOR_HEIGTH - g_i_WINDOW_HEIGHT)/2;
+
 	HWND hwnd = CreateWindowEx
 	(
 		NULL,
 		g_sz_WINDOW_CLASS,
 		g_sz_WINDOW_CLASS,
 		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX,
-		CW_USEDEFAULT, CW_USEDEFAULT,
+			wX			,			wY,
 		g_i_WINDOW_WIDTH, g_i_WINDOW_HEIGHT,
 		NULL,
 		NULL,
 		hInstance,
 		NULL
 	);
+	
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
@@ -98,6 +112,7 @@ INT WINAPI WinMain(HINSTANCE hInstance , HINSTANCE hPrevInst , LPSTR lpCmdLine ,
 
 LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 { 
+	
 	switch(uMsg)
 	{
 	case WM_CREATE:
@@ -400,6 +415,12 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 				SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 			}
 		}
+		switch(LOWORD(wParam))
+		{
+		case teame_ID_HALLOWEN:			new_teame(hwnd , teame_d_Hallowen);		break;
+		case teame_ID_METALMISTRAL:		new_teame(hwnd, teame_d_MetalMistral);	break;
+		case teame_ID_SQUAREBLUE:		new_teame(hwnd, teame_d_SquareBlue);	break;
+		}
 		SetFocus(hwnd);
 	}
 	break;
@@ -512,6 +533,34 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		}
 	}
 	break;
+
+
+	case WM_MOVING:
+	{
+		LPRECT rect = (LPRECT)lParam;
+
+		wX = rect->left;
+		wY = rect->top;
+	}
+	break;
+	case WM_CONTEXTMENU:
+	{
+#ifdef DEBUG
+		CHAR buf[MAX_PATH] = {};
+		std::cout << "context menu click : " << std::endl;
+#endif // DEBUG
+		
+		HMENU c_Menu = CreatePopupMenu();
+		//InsertMenu(c_Menu,0, MF_BYPOSITION | MF_STRING,IDC_BUTTON_EQUAL,"exit"); 
+		InsertMenu(c_Menu, 0, MF_BYPOSITION | MF_STRING, IDCLOSE, "exit");
+		InsertMenu(c_Menu,0, MF_BYPOSITION | MF_STRING,teame_ID_METALMISTRAL,":METAL MISTRAL");
+		InsertMenu(c_Menu,0, MF_BYPOSITION | MF_STRING,teame_ID_SQUAREBLUE,":SQUARE BLUE");
+		InsertMenu(c_Menu,0, MF_BYPOSITION | MF_STRING,teame_ID_HALLOWEN,":HALLOWEN");
+		SetForegroundWindow(hwnd);
+
+		TrackPopupMenu(c_Menu, TPM_BOTTOMALIGN | TPM_LEFTALIGN, wX+8, wY, 0, hwnd, NULL);
+	}
+break;
 	case WM_DESTROY:
 		FreeConsole();
 		PostQuitMessage(0);
@@ -562,12 +611,14 @@ HBITMAP get_image(const size_t& ResourceID, const int& width, const int& height)
 void new_teame(HWND& hwnd,const LPSTR& _teame)
 {
 	teame = _teame;
-	for (int i = 0; i <= IDC_BUTTON_9 - IDC_BUTTON_1; ++i)
-		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_1 + i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)get_image(IDC_BUTTON_1 + i , g_i_BUTTON_SIZE , g_i_BUTTON_SIZE));
-	SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)get_image(IDC_BUTTON_0 , g_i_DOUBLE_BUTTON_SIZE , g_i_BUTTON_SIZE));
+	for (int i = 0; i <= IDC_BUTTON_9 - IDC_BUTTON_1; ++i)//1 - 9 смена картинок
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_1 + i), BM_SETIMAGE, IMAGE_BITMAP,(LPARAM)get_image(IDC_BUTTON_1 + i , g_i_BUTTON_SIZE ,g_i_BUTTON_SIZE));
+	//далее меняется 0
+	SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0), BM_SETIMAGE, IMAGE_BITMAP,	(LPARAM)get_image(IDC_BUTTON_0 ,g_i_DOUBLE_BUTTON_SIZE ,g_i_BUTTON_SIZE));
 	
-	for(int i =0;i<=IDC_BUTTON_CLR - IDC_BUTTON_POINT;++i)
+	for(int i =0;i<=IDC_BUTTON_CLR - IDC_BUTTON_POINT;++i)// от button_point до button_clr смена картинок
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_POINT + i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)get_image(IDC_BUTTON_POINT+i, g_i_BUTTON_SIZE, g_i_BUTTON_SIZE));
+	//equal меняется последним
 	SendMessage(GetDlgItem(hwnd, IDC_BUTTON_EQUAL), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)get_image(IDC_BUTTON_EQUAL , g_i_BUTTON_SIZE  , g_i_DOUBLE_BUTTON_SIZE));
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////

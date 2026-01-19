@@ -163,7 +163,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_MOVING:
 	case WM_SIZING:
 	{
-		RECT* WinRect = (RECT*)lParam;
+		LPRECT WinRect = (LPRECT)lParam;
 		CHAR title_buffer[MAX_PATH] = {};
 		wsprintf(title_buffer, "%s%d%s%d%s%d%s%d",
 			"x : ",
