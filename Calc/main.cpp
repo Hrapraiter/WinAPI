@@ -32,6 +32,8 @@
 
 
 CONST CHAR g_OPERATORS[] = "+-*/";
+CONST CHAR* g_SKINS[] = {"metal_mistral","square_blue"};
+
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 VOID SetSkin(HWND hwnd, LPSTR sz_skin);
@@ -499,6 +501,33 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 			break;
 		}
+	}
+	break;
+
+	case WM_CONTEXTMENU:
+	{
+		HMENU hMenu = CreatePopupMenu();
+		
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_EXIT, "Exit");
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_SEPARATOR, NULL, NULL);
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_METAL_MISTRAL, "Metal mistral");
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING, IDR_SQUARE_BLUE, "Square blue");
+		
+		INT item = TrackPopupMenuEx
+		(
+			hMenu,
+			TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD | TPM_HORNEGANIMATION | TPM_VERNEGANIMATION ,
+			LOWORD(lParam),HIWORD(lParam),
+			(HWND)wParam,
+			NULL
+		);
+		switch(item)
+		{
+		case IDR_SQUARE_BLUE:	SetSkin(hwnd, (LPSTR)"square_blue"); break;
+		case IDR_METAL_MISTRAL: SetSkin(hwnd, (LPSTR)"metal_mistral"); break;
+		case IDR_EXIT:			SendMessage(hwnd, WM_CLOSE, 0, 0);
+		}
+		DestroyMenu(hMenu);
 	}
 	break;
 	case WM_DESTROY:
