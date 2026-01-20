@@ -32,7 +32,7 @@
 
 
 CONST CHAR g_OPERATORS[] = "+-*/";
-CONST CHAR* g_SKINS[] = {"metal_mistral","square_blue"};
+//CONST CHAR* g_SKINS[] = {"metal_mistral","square_blue"};
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,7 +229,26 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		SetSkin(hwnd, (LPSTR)"square_blue");
 	}
-		break;
+	break;
+	
+	case WM_CTLCOLOREDIT:
+	{
+		HDC hdc = (HDC)wParam; // Handler to Device Context.
+		// Контекст устройства - это набор ресурсов привязанных к определённому устройву,
+		// позволяющий применять к этому устройству горафические функции.
+		// в ОС Windows абсолютно для любого окна можно получить контекст устройства при помощи функции GetDC(hwnd).
+
+		//SetBkMode(hdc , OPAQUE);// задаём непрозрачный режим отображения hEditDisplay
+		SetBkColor(hdc, RGB(0,0,100));			// задаём цвет фона для EditControl
+		SetTextColor(hdc, RGB(200,200,200));	// задаём цвет текста для EditControl
+		HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));	// Создаём кисть для того чтобы покрачить главное окно
+		SetClassLongPtr(hwnd,GCLP_HBRBACKGROUND , (LONG)hBackground);	// Подменяем цвет фона в классе главного окна
+		
+		SendMessage(hwnd, WM_ERASEBKGND, wParam, 0); // Убираем старый фон с главного окна
+		return (LRESULT)hBackground;
+	}
+	break;
+	
 	case WM_COMMAND:
 	{
 		static DOUBLE	a = DBL_MIN, b = DBL_MIN; // DBL_MIN = -(2^64)/2
