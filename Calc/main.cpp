@@ -29,10 +29,12 @@
 #define img_RESIZE(size)			(size) - 4
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+HFONT test = NULL;// это дискриптор посути указатель без полного доступа к памяти
 
+LPSTR SKIN = NULL;
 
 CONST CHAR g_OPERATORS[] = "+-*/";
-LPSTR SKIN = NULL;
+
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,6 +99,7 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 { 
 	switch(uMsg)
 	{
+	
 	case WM_CREATE:
 	{
 #ifdef DEBUG
@@ -225,6 +228,7 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		// а вот тут чтото странное 
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		SetSkin(hwnd, (LPSTR)"square_blue");
@@ -239,7 +243,6 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		// в ОС Windows абсолютно для любого окна можно получить контекст устройства при помощи функции GetDC(hwnd).
 
 		//SetBkMode(hdc , OPAQUE);// задаём непрозрачный режим отображения hEditDisplay
-		
 		if(SKIN == "square_blue")
 		{
 			SetBkColor(hdc, RGB(0, 0, 100));		// задаём цвет фона для EditControl
@@ -247,6 +250,7 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 			HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));			// Создаём кисть для того чтобы покрачить главное окно
 			SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);	// Подменяем цвет фона в классе главного окна
 			SendMessage(hwnd, WM_ERASEBKGND, wParam, 0); // Убираем старый фон с главного окна
+
 			SetFocus(GetDlgItem(hwnd,IDC_DISPLAY));// нужно чтобы перерисовался дисплей без этой строчки приходится кликать
 												   // в примерное место EditControl
 			return (LRESULT)hBackground;
@@ -258,8 +262,10 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 			HBRUSH hBackground = CreateSolidBrush(RGB(135, 129, 115));
 			SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);
 			SendMessage(hwnd, WM_ERASEBKGND, wParam, 0);
+			
 			SetFocus(GetDlgItem(hwnd , IDC_DISPLAY));// нужно чтобы перерисовался дисплей без этой строчки приходится кликать
 													 // в примерное место EditControl
+			
 			return (LRESULT)hBackground;
 		}
 	}
@@ -568,6 +574,9 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 	case WM_DESTROY:
 		FreeConsole();
 		PostQuitMessage(0);
+
+		DeleteObject(test);
+		test = NULL;
 		break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
@@ -601,6 +610,30 @@ VOID SetSkin(HWND hwnd , LPSTR sz_skin)
 		"button_clr",
 		"button_equal"
 	};
+	if (sz_skin == "square_blue")
+	{
+		DeleteObject(test);
+		test = NULL;
+		
+		test = CreateFont
+		(
+			20, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, TEXT("Bitcount Open Default Italic")
+		);
+		SendMessage(GetDlgItem(hwnd, IDC_DISPLAY), WM_SETFONT, (WPARAM)test, (LPARAM)TRUE);
+	}
+	else if(sz_skin == "metal_mistral")
+	{
+		DeleteObject(test);
+		test = NULL;
+
+		test = CreateFont
+		(
+			20, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, TEXT("Kom-post")
+		);
+		SendMessage(GetDlgItem(hwnd, IDC_DISPLAY), WM_SETFONT, (WPARAM)test, (LPARAM)TRUE);
+	}
 	SKIN = sz_skin;
 
 	for(int i = 0;i < 18;i++)
