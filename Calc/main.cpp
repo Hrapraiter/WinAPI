@@ -32,7 +32,7 @@
 
 
 CONST CHAR g_OPERATORS[] = "+-*/";
-//CONST CHAR* g_SKINS[] = {"metal_mistral","square_blue"};
+LPSTR SKIN = NULL;
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,13 +239,29 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		// в ОС Windows абсолютно для любого окна можно получить контекст устройства при помощи функции GetDC(hwnd).
 
 		//SetBkMode(hdc , OPAQUE);// задаём непрозрачный режим отображения hEditDisplay
-		SetBkColor(hdc, RGB(0,0,100));			// задаём цвет фона для EditControl
-		SetTextColor(hdc, RGB(200,200,200));	// задаём цвет текста для EditControl
-		HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));	// Создаём кисть для того чтобы покрачить главное окно
-		SetClassLongPtr(hwnd,GCLP_HBRBACKGROUND , (LONG)hBackground);	// Подменяем цвет фона в классе главного окна
 		
-		SendMessage(hwnd, WM_ERASEBKGND, wParam, 0); // Убираем старый фон с главного окна
-		return (LRESULT)hBackground;
+		if(SKIN == "square_blue")
+		{
+			SetBkColor(hdc, RGB(0, 0, 100));		// задаём цвет фона для EditControl
+			SetTextColor(hdc, RGB(200, 200, 200));	// задаём цвет текста для EditControl
+			HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));			// Создаём кисть для того чтобы покрачить главное окно
+			SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);	// Подменяем цвет фона в классе главного окна
+			SendMessage(hwnd, WM_ERASEBKGND, wParam, 0); // Убираем старый фон с главного окна
+			SetFocus(GetDlgItem(hwnd,IDC_DISPLAY));// нужно чтобы перерисовался дисплей без этой строчки приходится кликать
+												   // в примерное место EditControl
+			return (LRESULT)hBackground;
+		}
+		if(SKIN == "metal_mistral")
+		{
+			SetBkColor(hdc, RGB(107, 100, 84));
+			SetTextColor(hdc, RGB(240, 227, 182));
+			HBRUSH hBackground = CreateSolidBrush(RGB(135, 129, 115));
+			SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG)hBackground);
+			SendMessage(hwnd, WM_ERASEBKGND, wParam, 0);
+			SetFocus(GetDlgItem(hwnd , IDC_DISPLAY));// нужно чтобы перерисовался дисплей без этой строчки приходится кликать
+													 // в примерное место EditControl
+			return (LRESULT)hBackground;
+		}
 	}
 	break;
 	
@@ -585,6 +601,8 @@ VOID SetSkin(HWND hwnd , LPSTR sz_skin)
 		"button_clr",
 		"button_equal"
 	};
+	SKIN = sz_skin;
+
 	for(int i = 0;i < 18;i++)
 	{
 		HWND hButton = GetDlgItem(hwnd, IDC_BUTTON_0 + i);
@@ -602,5 +620,7 @@ VOID SetSkin(HWND hwnd , LPSTR sz_skin)
 		);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 	}
+	HWND hEdit = GetDlgItem(hwnd, IDC_DISPLAY);
+	SendMessage(hwnd , WM_CTLCOLOREDIT , (WPARAM)GetDC(hEdit) ,(LPARAM)hEdit);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
