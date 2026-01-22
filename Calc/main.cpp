@@ -29,7 +29,7 @@
 #define img_RESIZE(size)			(size) - 4
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-HFONT test = NULL;// это дискриптор посути указатель без полного доступа к памяти
+HFONT font = NULL;// это дискриптор посути указатель без полного доступа к памяти
 
 LPSTR SKIN = NULL;
 
@@ -575,8 +575,8 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		FreeConsole();
 		PostQuitMessage(0);
 
-		DeleteObject(test);
-		test = NULL;
+		DeleteObject(font);
+		font = NULL;
 		break;
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
@@ -612,27 +612,27 @@ VOID SetSkin(HWND hwnd , LPSTR sz_skin)
 	};
 	if (sz_skin == "square_blue")
 	{
-		DeleteObject(test);
-		test = NULL;
+		DeleteObject(font);
+		font = NULL;
 		
-		test = CreateFont
+		font = CreateFont
 		(
-			20, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+			25, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
 			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, TEXT("Bitcount Open Default Italic")
 		);
-		SendMessage(GetDlgItem(hwnd, IDC_DISPLAY), WM_SETFONT, (WPARAM)test, (LPARAM)TRUE);
+		SendMessage(GetDlgItem(hwnd, IDC_DISPLAY), WM_SETFONT, (WPARAM)font, TRUE);
 	}
 	else if(sz_skin == "metal_mistral")
 	{
-		DeleteObject(test);
-		test = NULL;
+		DeleteObject(font);
+		font = NULL;
 
-		test = CreateFont
+		font = CreateFont
 		(
 			20, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
 			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, TEXT("Kom-post")
 		);
-		SendMessage(GetDlgItem(hwnd, IDC_DISPLAY), WM_SETFONT, (WPARAM)test, (LPARAM)TRUE);
+		SendMessage(GetDlgItem(hwnd, IDC_DISPLAY), WM_SETFONT, (WPARAM)font, TRUE);
 	}
 	SKIN = sz_skin;
 
