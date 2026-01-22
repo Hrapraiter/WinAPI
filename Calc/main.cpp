@@ -32,7 +32,16 @@
 
 
 CONST CHAR g_OPERATORS[] = "+-*/";
-//CONST CHAR* g_SKINS[] = {"metal_mistral","square_blue"};
+CONST CHAR* g_SKINS[] = {"square_blue","metal_mistral"};
+
+enum Skin{ SquareBlue , MetalMistral};
+enum Color{MainBackground , DisplayBackground , Font};
+
+CONST COLORREF g_COLORS[2][3] = 
+{
+	{RGB(0,0,200),RGB(0,0,100),RGB(200,200,200)},
+	{RGB(100,100,100),RGB(50,50,100),RGB(50,200,50)}
+};
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,6 +104,7 @@ INT WINAPI WinMain(HINSTANCE hInstance , HINSTANCE hPrevInst , LPSTR lpCmdLine ,
 
 LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 { 
+	static Skin skin = Skin::SquareBlue;
 	switch(uMsg)
 	{
 	case WM_CREATE:
@@ -237,14 +247,19 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		// Контекст устройства - это набор ресурсов привязанных к определённому устройву,
 		// позволяющий применять к этому устройству горафические функции.
 		// в ОС Windows абсолютно для любого окна можно получить контекст устройства при помощи функции GetDC(hwnd).
-
 		//SetBkMode(hdc , OPAQUE);// задаём непрозрачный режим отображения hEditDisplay
-		SetBkColor(hdc, RGB(0,0,100));			// задаём цвет фона для EditControl
-		SetTextColor(hdc, RGB(200,200,200));	// задаём цвет текста для EditControl
-		HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));	// Создаём кисть для того чтобы покрачить главное окно
-		SetClassLongPtr(hwnd,GCLP_HBRBACKGROUND , (LONG)hBackground);	// Подменяем цвет фона в классе главного окна
 		
+		HBRUSH hBackground = CreateSolidBrush(g_COLORS[skin][Color::MainBackground]);
+		SetBkColor(hdc, g_COLORS[skin][Color::DisplayBackground]);
+		SetTextColor(hdc, g_COLORS[skin][Color::Font]);
+		
+		/*SetBkColor(hdc, RGB(0, 0, 100));			// задаём цвет фона для EditControl
+		SetTextColor(hdc, RGB(200,200,200));	// задаём цвет текста для EditControl
+		HBRUSH hBackground = CreateSolidBrush(RGB(0, 0, 200));*/	// Создаём кисть для того чтобы покрачить главное окно
+
+		SetClassLongPtr(hwnd,GCLP_HBRBACKGROUND , (LONG)hBackground);	// Подменяем цвет фона в классе главного окна
 		SendMessage(hwnd, WM_ERASEBKGND, wParam, 0); // Убираем старый фон с главного окна
+
 		return (LRESULT)hBackground;
 	}
 	break;
@@ -547,6 +562,14 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		case IDR_EXIT:			SendMessage(hwnd, WM_CLOSE, 0, 0);
 		}
 		DestroyMenu(hMenu);
+
+		skin = Skin(item - IDR_SQUARE_BLUE);
+		HWND hEditDisplay = GetDlgItem(hwnd, IDC_DISPLAY);
+		HDC hdc = GetDC(hwnd);
+		
+		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdc, (LPARAM)hEditDisplay);
+		ReleaseDC(hwnd, hdc);
+		SetFocus(GetDlgItem(hwnd, IDC_DISPLAY));
 	}
 	break;
 	case WM_DESTROY:
