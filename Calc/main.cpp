@@ -15,7 +15,7 @@
 #define g_i_START_X					10
 #define g_i_START_Y					10
 #define g_i_DISPLAY_WIDTH			g_i_BUTTON_SIZE * 5 + g_i_INTERVAL * 4
-#define g_i_DISPLAY_HEIGHT			22
+#define g_i_DISPLAY_HEIGHT			g_i_BUTTON_SIZE
 
 #define g_i_BUTTON_START_X			g_i_START_X
 #define g_i_BUTTON_START_Y			g_i_START_Y+g_i_DISPLAY_HEIGHT+g_i_INTERVAL
@@ -27,6 +27,9 @@
 #define g_i_WINDOW_HEIGHT			g_i_DISPLAY_HEIGHT + g_i_START_Y*2 + (g_i_BUTTON_SIZE + g_i_INTERVAL)*4 + 38 // 38 высота строки заголовка
 
 #define img_RESIZE(size)			(size) - 4
+
+#define g_i_FONT_HEIGHT				(g_i_DISPLAY_HEIGHT - 2)
+#define g_i_FONT_WIDTH				g_i_FONT_HEIGHT /2.5
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,6 +108,7 @@ INT WINAPI WinMain(HINSTANCE hInstance , HINSTANCE hPrevInst , LPSTR lpCmdLine ,
 LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 { 
 	static Skin skin = Skin::SquareBlue;
+	static HFONT hFont = NULL;
 	switch(uMsg)
 	{
 	case WM_CREATE:
@@ -125,7 +129,22 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 			GetModuleHandle(NULL),
 			NULL
 		);
+		//AddFontResourceEx("fonts\\DS-DIGI.ttf", FR_PRIVATE, 0);
+		AddFontResourceEx("fonts\\digital-7 (mono).ttf", FR_PRIVATE, 0);
+		hFont = CreateFont
+		(	g_i_FONT_HEIGHT ,g_i_FONT_WIDTH,
+			0 ,0 ,500,
+			FALSE , FALSE , FALSE ,
+			DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS,
+			ANTIALIASED_QUALITY,
+			DEFAULT_PITCH,
+			"Digital-7 Mono"//TEXT("DS-Digital")
+		);
+		SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
 		
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		CHAR sz_digit[2] = {};
 		int but = 0;
@@ -568,12 +587,18 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		HDC hdc = GetDC(hwnd);
 		
 		SendMessage(hwnd, WM_CTLCOLOREDIT, (WPARAM)hdc, (LPARAM)hEditDisplay);
+		
 		ReleaseDC(hwnd, hdc);
+
 		SetFocus(GetDlgItem(hwnd, IDC_DISPLAY));
 	}
 	break;
 	case WM_DESTROY:
 		FreeConsole();
+
+		DeleteObject(hFont);
+		hFont = NULL;
+
 		PostQuitMessage(0);
 		break;
 	case WM_CLOSE:
