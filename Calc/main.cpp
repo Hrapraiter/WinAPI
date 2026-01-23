@@ -48,7 +48,8 @@ CONST COLORREF g_COLORS[2][3] =
 
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-VOID SetSkin(HWND hwnd, LPSTR sz_skin);
+//VOID SetSkin(HWND hwnd, LPSTR sz_skin);
+VOID LoadSkin(HWND  hwnd, LPSTR sz_filename);
 
 LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -256,7 +257,8 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		);
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		SetSkin(hwnd, (LPSTR)"square_blue");
+		//SetSkin(hwnd, (LPSTR)"square_blue");
+		LoadSkin(hwnd, LPSTR("square_blue"));
 	}
 	break;
 	
@@ -576,8 +578,8 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		);
 		switch(item)
 		{
-		case IDR_SQUARE_BLUE:	SetSkin(hwnd, (LPSTR)"square_blue"); break;
-		case IDR_METAL_MISTRAL: SetSkin(hwnd, (LPSTR)"metal_mistral"); break;
+		case IDR_SQUARE_BLUE:	LoadSkin(hwnd, (LPSTR)"square_blue"); break;
+		case IDR_METAL_MISTRAL: LoadSkin(hwnd, (LPSTR)"metal_mistral"); break;
 		case IDR_EXIT:			SendMessage(hwnd, WM_CLOSE, 0, 0);
 		}
 		DestroyMenu(hMenu);
@@ -607,7 +609,7 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 	}
 	return FALSE;
 }
-
+/*
 VOID SetSkin(HWND hwnd , LPSTR sz_skin)
 {
 	CONST CHAR* sz_NAMES[] =
@@ -650,5 +652,53 @@ VOID SetSkin(HWND hwnd , LPSTR sz_skin)
 		);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 	}
+}
+*/
+VOID LoadSkin(HWND  hwnd ,LPSTR sz_filename)
+{
+	CHAR path[MAX_PATH] = {};
+	CONST INT res_count = 18;
+	INT start = 0;
+
+	if (sz_filename == "square_blue")			start = 300;
+	else if (sz_filename == "metal_mistral")	start = 200;
+	
+	wsprintf(path, "dll_res\\%s.dll", sz_filename);
+
+	//MessageBox(hwnd, "START DLL LOAD", "INFO", MB_OK | MB_ICONINFORMATION);
+	HMODULE hDll = LoadLibrary(path);
+	if (!hDll)
+	{
+		MessageBox(NULL, "ERROR LOAD .DLL", "Error", MB_OK | MB_ICONERROR);
+		hDll = NULL;
+		return;
+	}
+	
+	for (int i = 0; i < res_count; ++i)
+	{
+		CHAR sz_str_ID[MAX_PATH] = {};
+		wsprintf(sz_str_ID, "%d", (start + i));
+		
+		HBITMAP bmp = (HBITMAP)LoadImage
+		(
+			hDll,
+			MAKEINTRESOURCE(start + i),
+			IMAGE_BITMAP,
+			i > 0 ? g_i_BUTTON_SIZE : g_i_DOUBLE_BUTTON_SIZE,
+			i < 17? g_i_BUTTON_SIZE : g_i_DOUBLE_BUTTON_SIZE,
+			LR_CREATEDIBSECTION);
+
+		/*if (!bmp) 
+		{
+			DWORD err = GetLastError();
+			CHAR sz_err_code[50] = {};
+			wsprintf(sz_err_code, "Error load bitmap -> ERROR : %d", err);
+			MessageBox(NULL, sz_err_code, "Error", MB_OK | MB_ICONERROR);
+		}*/
+			
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0 + i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp);
+	}
+	FreeLibrary(hDll);
+	hDll = NULL;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
