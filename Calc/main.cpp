@@ -49,6 +49,7 @@ CONST COLORREF g_COLORS[2][3] =
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc PV_522";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 VOID SetSkin(HWND hwnd, LPSTR sz_skin);
+VOID SetSkinFromDLL(HWND hwnd, LPSTR sz_skin);
 
 LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -256,7 +257,7 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		);
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		SetSkin(hwnd, (LPSTR)"square_blue");
+		SetSkinFromDLL(hwnd, (LPSTR)"square_blue");//вызов функции
 	}
 	break;
 	
@@ -576,8 +577,8 @@ LRESULT WndProc(HWND hwnd , UINT uMsg , WPARAM wParam , LPARAM lParam)
 		);
 		switch(item)
 		{
-		case IDR_SQUARE_BLUE:	SetSkin(hwnd, (LPSTR)"square_blue"); break;
-		case IDR_METAL_MISTRAL: SetSkin(hwnd, (LPSTR)"metal_mistral"); break;
+		case IDR_SQUARE_BLUE:	SetSkinFromDLL(hwnd, (LPSTR)"square_blue");/*вызов функции*/ break;
+		case IDR_METAL_MISTRAL: SetSkinFromDLL(hwnd, (LPSTR)"metal_mistral"); break;
 		case IDR_EXIT:			SendMessage(hwnd, WM_CLOSE, 0, 0);
 		}
 		DestroyMenu(hMenu);
@@ -650,5 +651,24 @@ VOID SetSkin(HWND hwnd , LPSTR sz_skin)
 		);
 		SendMessage(hButton, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
 	}
+}
+
+VOID SetSkinFromDLL(HWND hwnd, LPSTR sz_skin)// прототип функции || объявление функции
+{// реализация функции || определение функции || тело функции
+	HINSTANCE hSkin = LoadLibrary(sz_skin);
+	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_EQUAL; i++)
+	{
+		HBITMAP bmpButton = (HBITMAP)LoadImage
+		(
+			hSkin,
+			MAKEINTRESOURCE(i),
+			IMAGE_BITMAP,
+			i > IDC_BUTTON_0	 ? g_i_BUTTON_SIZE : g_i_DOUBLE_BUTTON_SIZE,
+			i < IDC_BUTTON_EQUAL ? g_i_BUTTON_SIZE : g_i_DOUBLE_BUTTON_SIZE,
+			LR_SHARED//LR_CREATEDIBSECTION
+		);
+		SendMessage(GetDlgItem(hwnd , i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
+	}
+	FreeLibrary(hSkin);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
