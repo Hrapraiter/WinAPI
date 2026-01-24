@@ -686,15 +686,18 @@ VOID LoadSkin(HWND  hwnd ,LPSTR sz_filename)
 			IMAGE_BITMAP,
 			i > 0 ? g_i_BUTTON_SIZE : g_i_DOUBLE_BUTTON_SIZE,
 			i < 17? g_i_BUTTON_SIZE : g_i_DOUBLE_BUTTON_SIZE,
-			LR_CREATEDIBSECTION);
+			LR_CREATEDIBSECTION
+		);
 
-		/*if (!bmp) 
+		/*
+		if (!bmp) 
 		{
 			DWORD err = GetLastError();
 			CHAR sz_err_code[50] = {};
 			wsprintf(sz_err_code, "Error load bitmap -> ERROR : %d", err);
 			MessageBox(NULL, sz_err_code, "Error", MB_OK | MB_ICONERROR);
-		}*/
+		}
+		*/
 			
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0 + i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp);
 	}
